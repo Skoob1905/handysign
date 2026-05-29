@@ -36,7 +36,7 @@ export const isAdminUser = async (uid: string): Promise<boolean> => {
 
 export const getStaffUsersByAgency = async (agencyId: string): Promise<AppUser[]> => {
   const usersRef = collection(db, "users");
-  const q = query(usersRef, where("agencyId", "==", agencyId), where("role", "==", "user"));
+  const q = query(usersRef, where("agencyId", "==", agencyId), where("role", "==", "staff"));
   const snaps = await getDocs(q);
   return snaps.docs.map((d) => ({ uid: d.id, ...(d.data() as Omit<AppUser, "uid">) }));
 };
@@ -98,7 +98,7 @@ export const checkEmailStatus = async (
     const role = usersSnaps.docs[0].data().role as UserRole | undefined;
     return {
       exists: true,
-      role: role === "admin" ? "admin" : "user",
+      role: role === "admin" ? "admin" : "staff",
       state: "staff",
     };
   }
@@ -110,7 +110,7 @@ export const checkEmailStatus = async (
   );
   const awaitingSnaps = await getDocs(awaitingQuery);
   if (!awaitingSnaps.empty) {
-    return { exists: true, role: "user", state: "awaiting" };
+    return { exists: true, role: "staff", state: "awaiting" };
   }
 
   return { exists: false };

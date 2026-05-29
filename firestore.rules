@@ -23,6 +23,14 @@ service cloud.firestore {
       return isSignedIn() && userRole() == "admin";
     }
 
+    function isStaff() {
+      return isSignedIn() && (userRole() == "staff" || userRole() == "user");
+    }
+
+    function isClient() {
+      return isSignedIn() && userRole() == "client";
+    }
+
     function sameAgency(resourceAgencyId) {
       return isSignedIn() && resourceAgencyId == userAgencyId();
     }
@@ -128,6 +136,27 @@ service cloud.firestore {
         (isSignedIn() && resource.data.uid == request.auth.uid);
       allow create, update, delete: if isAdmin() &&
         request.resource.data.agencyId == userAgencyId();
+    }
+
+    // Bulk-imported staff records
+    match /staff/{staffId} {
+      allow read: if isSignedIn() && (
+        (isAdmin() && resource.data.metadata.uploadedBy == userAgencyId()) ||
+        (isClient() && resource.data.metadata.assignedToId == request.auth.uid)
+      );
+      allow write: if isAdmin() && request.resource.data.metadata.uploadedBy == userAgencyId();
+    }
+
+    // Staff tag definitions
+    match /tags/{tagId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // CSV import history
+    match /csv_imports/{docId} {
+      allow read: if isAdmin() && resource.data.agencyId == userAgencyId();
+      allow write: if isAdmin() && request.resource.data.agencyId == userAgencyId();
     }
   }
 }

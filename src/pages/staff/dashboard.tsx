@@ -37,7 +37,9 @@ import type { Payslip, UnsignedContract } from "../../types/domain";
 import { formatInvitedAt } from "../../utils/date";
 
 export const UserHomePage = () => {
-  useEffect(() => { document.title = "Home"; }, []);
+  useEffect(() => {
+    document.title = "Home";
+  }, []);
   const { appUser, refreshProfile } = useAuth();
   const { toast } = useToast();
   const [contracts, setContracts] = useState<UnsignedContract[]>([]);
@@ -372,7 +374,9 @@ export const UserHomePage = () => {
         ) : null}
         {registrationStatus === "registered" && latestUndownloadedPayslip ? (
           <div className="mt-3 flex items-center justify-between rounded-xl border border-[var(--border)] bg-[color:rgba(31,79,138,0.08)] px-3 py-2">
-            <p className="text-sm text-[var(--foreground)]">Download latest payslip</p>
+            <p className="text-sm text-[var(--foreground)]">
+              Download latest payslip
+            </p>
             <Button
               type="button"
               className="bg-[var(--primary)] text-white"
@@ -417,7 +421,9 @@ export const UserHomePage = () => {
                 <b>Signed At:</b> {formatInvitedAt(appUser.contractSignedAt)}
               </p>
             ) : appUser?.contractSigned === undefined ? (
-              <p className="text-sm text-[var(--muted-foreground)]">No contracts signed.</p>
+              <p className="text-sm text-[var(--muted-foreground)]">
+                No contracts signed.
+              </p>
             ) : null}
           </div>
         </div>

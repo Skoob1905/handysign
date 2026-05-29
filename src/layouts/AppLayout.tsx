@@ -1,66 +1,60 @@
-import { Home, Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { logoutUser } from "../services/authService";
 import { useAuth } from "../context/AuthProvider";
 import { Button } from "../components/ui";
+import { RoleNav } from "../utils/nav";
+import { Footer } from "../components/Footer";
+import { config } from "../config";
 
 export const AppLayout = () => {
-  const { agency } = useAuth();
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const { appUser } = useAuth();
+  const role = appUser?.role;
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const nextTheme =
-      stored === "dark" || stored === "light"
-        ? (stored as "light" | "dark")
-        : prefersDark
-          ? "dark"
-          : "light";
-    setTheme(nextTheme);
-    document.documentElement.setAttribute("data-theme", nextTheme);
+    const splash = document.getElementById("splash");
+    if (splash) splash.style.display = "none";
   }, []);
 
-  const toggleTheme = () => {
-    const nextTheme = theme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    document.documentElement.setAttribute("data-theme", nextTheme);
-  };
-
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <header
         className="sticky top-0 z-20 border-b border-[var(--border)] backdrop-blur"
         style={{ backgroundColor: "var(--header-bg)" }}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-2 text-[var(--foreground)]">
-            <Home className="h-5 w-5 text-[var(--muted-foreground)]" />
-            <span className="text-sm font-bold">HandySign</span>
-          </div>
-          <div className="text-sm text-[var(--muted-foreground)]">{agency?.name ?? "Agency"}</div>
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              className="rounded-lg"
-              onClick={toggleTheme}
+        <div className="mx-auto max-w-6xl px-4 py-3">
+          <div className="flex flex-wrap items-center sm:grid sm:grid-cols-[1fr_auto_1fr]">
+            <a
+              href={config.homepage}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="justify-self-start"
             >
-              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-            </Button>
-            <Button type="button" className="rounded-lg" onClick={() => void logoutUser()}>
-              Logout
-            </Button>
+              <img
+                src={config.navbar}
+                alt={config.name}
+                className="max-h-5 w-auto shrink-0 object-contain sm:max-h-6 md:max-h-7"
+              />
+            </a>
+            <RoleNav role={role} />
+            <div className="ml-auto flex items-center gap-2 sm:justify-self-end sm:ml-0">
+              <Button
+                type="button"
+                className="rounded-lg"
+                onClick={() => void logoutUser()}
+              >
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-6">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-3 sm:py-6">
         <Outlet />
       </main>
+
+      <Footer />
     </div>
   );
 };

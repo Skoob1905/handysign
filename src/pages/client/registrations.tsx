@@ -121,14 +121,14 @@ export const AdminStaffPage = () => {
         }
         toast({
           title: "Invite blocked",
-          description: `This email is already registered as ${emailStatus.role ?? "user"}.`,
+          description: `This email is already registered as ${emailStatus.role ?? "staff"}.`,
           variant: "error",
         });
         return;
       }
 
-      const callable = httpsCallable(functions, "invitePortalUser");
-      await callable({ email: normalizedEmail, role: "user" });
+      const callable = httpsCallable(functions, "invitedPortalStaff");
+      await callable({ email: normalizedEmail, role: "staff" });
       toast({
         title: "Invite sent",
         description: "Staff registration invite has been sent.",

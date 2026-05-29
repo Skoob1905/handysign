@@ -16,6 +16,10 @@ service firebase.storage {
       return isSignedIn() && userDoc().data.role == "admin";
     }
 
+    function isStaff() {
+      return isSignedIn() && (userDoc().data.role == "staff" || userDoc().data.role == "user");
+    }
+
     // Unsigned contracts assigned by admin to a staff member.
     match /contracts/unsigned/{userId}/{allPaths=**} {
       allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
@@ -42,6 +46,18 @@ service firebase.storage {
     match /uploads/from_staff/{userId}/{allPaths=**} {
       allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
       allow write: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+    }
+
+    // Staff CSV imports by admin.
+    match /staff_imports/{agencyId}/{allPaths=**} {
+      allow read: if isAdmin() && userDoc().data.agencyId == agencyId;
+      allow write: if isAdmin() && userDoc().data.agencyId == agencyId;
+    }
+
+    // Client/agency CSV imports by admin.
+    match /agency_imports/{agencyId}/{allPaths=**} {
+      allow read: if isAdmin() && userDoc().data.agencyId == agencyId;
+      allow write: if isAdmin() && userDoc().data.agencyId == agencyId;
     }
 
     match /{allPaths=**} {

@@ -51,7 +51,7 @@ const normalizeEmail = (value: unknown): string =>
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const namePattern = /^[A-Za-z' -]+$/;
 
-export const invitePortalUser = onCall(async (request) => {
+export const invitedPortalStaff = onCall(async (request) => {
   const callerUid = request.auth?.uid;
   if (!callerUid) throw new HttpsError("unauthenticated", "Sign in required.");
 
@@ -128,7 +128,7 @@ export const invitePortalUser = onCall(async (request) => {
       uid: user.uid,
       email,
       agencyId: caller.agencyId,
-      role: "user",
+      role: "staff",
       invitedByUid: callerUid,
       status: "awaiting",
       invitedAt: FieldValue.serverTimestamp(),
@@ -142,7 +142,7 @@ export const invitePortalUser = onCall(async (request) => {
     {
       uid: user.uid,
       email,
-      role: "user",
+      role: "staff",
       agencyId: caller.agencyId,
       registrationStatus: "awaiting",
       invitedByUid: callerUid,
@@ -243,7 +243,7 @@ export const removeUnregisteredStaffUser = onCall(async (request) => {
   const userSnap = await userRef.get();
   if (userSnap.exists) {
     const userData = userSnap.data() as { agencyId?: string; role?: string };
-    if (userData.agencyId === caller.agencyId && userData.role === "user") {
+    if (userData.agencyId === caller.agencyId && userData.role === "staff") {
       await userRef.delete();
     }
   }
@@ -329,7 +329,7 @@ export const registerStaffProfile = onCall(async (request) => {
     {
       uid: callerUid,
       email: awaiting.email,
-      role: "user",
+      role: "staff",
       agencyId: awaiting.agencyId,
       registrationStatus: "registered",
       firstName,

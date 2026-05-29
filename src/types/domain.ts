@@ -1,4 +1,4 @@
-export type UserRole = "admin" | "user";
+export type UserRole = "admin" | "client" | "staff";
 
 export interface AppUser {
   uid: string;
@@ -76,3 +76,36 @@ export interface AwaitingRegistration {
   status: "awaiting";
   invitedAt?: Date;
 }
+
+export interface BulkStaff {
+  id: string;
+  email?: string;
+  Forename?: string;
+  Surname?: string;
+  Title?: string;
+  FullName?: string;
+  [key: string]: unknown;
+}
+
+export interface StaffTag {
+  id: string;
+  value: string;
+  tag?: string;
+  count?: number;
+}
+
+export type StaffType = string;
+
+export interface StaffFilters {
+  name?: string;
+  typeIds?: string[];
+  tagIds?: string[];
+  agencyIds?: string[];
+}
+
+export const emptyFilters: StaffFilters = {
+  name: "",
+  typeIds: [],
+  tagIds: [],
+  agencyIds: [],
+};

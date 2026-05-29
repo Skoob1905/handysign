@@ -2,7 +2,10 @@
     {
         "origin": [
             "https://localhost:5000",
-            "https://handysign.vercel.app"
+            "https://handysign.vercel.app",
+            "https://blackrockconsultancy.vercel.app",
+            "https://cerobi.vercel.app",
+            "https://crs-staffing.vercel.app"
         ],
         "method": [
             "GET",
