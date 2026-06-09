@@ -93,11 +93,12 @@ export const PaginatedFilterSection = <T,>({
         <button
           type="button"
           onClick={() => setShowFilterModal(true)}
-          className="relative inline-flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--muted-foreground)] transition hover:bg-[color:rgba(0,95,87,0.06)]"
+          className="relative inline-flex h-8 items-center justify-center gap-1 rounded-xl border border-[#CCFBF1] bg-white px-2.5 text-xs font-semibold text-[#14B8A6] shadow-sm transition hover:bg-[#CCFBF1] md:px-3 md:text-sm"
         >
           <Filter className="h-3.5 w-3.5" />
+          Filter
           {activeFilterCount > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[var(--primary)] text-[9px] font-bold text-white">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#14B8A6] text-[9px] font-bold text-white">
               {activeFilterCount}
             </span>
           )}
