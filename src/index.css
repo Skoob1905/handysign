@@ -44,12 +44,15 @@ body {
 }
 
 .app-bg {
-  background: radial-gradient(
-    circle at top right,
-    color-mix(in srgb, var(--background) 85%, white 15%) 0%,
-    var(--background) 60%,
-    color-mix(in srgb, var(--background) 95%, black 5%) 100%
-  );
+  background:
+    radial-gradient(circle at 20% 20%, rgba(20, 185, 166, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(20, 185, 166, 0.03) 0%, transparent 50%),
+    radial-gradient(
+      circle at top right,
+      color-mix(in srgb, var(--background) 85%, white 15%) 0%,
+      var(--background) 60%,
+      color-mix(in srgb, var(--background) 95%, black 5%) 100%
+    );
 }
 
 
