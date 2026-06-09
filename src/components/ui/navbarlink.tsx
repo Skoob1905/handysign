@@ -59,7 +59,7 @@ export const Navbar = () => {
 
   return (
     <header
-      className="sticky top-0 z-20 border-b border-[var(--border)] backdrop-blur"
+      className="sticky top-0 z-20 border-b border-[#CCFBF1] backdrop-blur"
       style={{ backgroundColor: "var(--header-bg)" }}
     >
       <GlobalBanner />
