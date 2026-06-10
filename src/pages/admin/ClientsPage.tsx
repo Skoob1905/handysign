@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { httpsCallable } from "firebase/functions";
-import { FileSignature, Plus } from "lucide-react";
-import { AddModal } from "../../components/AddModal";
+import { FileSignature } from "lucide-react";
 import { ImportHistory } from "../../components/ImportHistory";
 import {
   AccordionItem,
@@ -29,7 +28,6 @@ export const AdminClientsPage = () => {
 
   const { appUser } = useAuth();
   const { toast } = useToast();
-  const [showAddModal, setShowAddModal] = useState(false);
   const [confirmDeleteClient, setConfirmDeleteClient] = useState<Record<
     string,
     unknown
@@ -104,10 +102,6 @@ export const AdminClientsPage = () => {
   };
 
   const handleDeleteSuccess = async () => {
-    setTimeout(() => refresh(), 2000);
-  };
-
-  const handleAddSuccess = async () => {
     setTimeout(() => refresh(), 2000);
   };
 
@@ -214,16 +208,7 @@ export const AdminClientsPage = () => {
             </AccordionItem>
           );
         }}
-        action={
-          <Button
-            type="button"
-            onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-1"
-          >
-            <Plus className="h-4 w-4" />
-            Add
-          </Button>
-        }
+        action={null}
         page={page}
         totalPages={totalPages}
         pageSize={pageSize}
@@ -261,21 +246,6 @@ export const AdminClientsPage = () => {
           )
         }
         onDeleteSuccess={handleDeleteSuccess}
-      />
-
-      <AddModal
-        open={showAddModal}
-        onOpenChange={setShowAddModal}
-        cloudFunction="importAgencyCsv"
-        storagePath="agency_imports"
-        itemLabel="client"
-        itemLabelPlural="clients"
-        csvType="agency"
-        duplicateKey="business_name"
-        onSuccess={handleAddSuccess}
-        confirmText={(count) =>
-          `Import ${count} client${count !== 1 ? "s" : ""}`
-        }
       />
 
       <DialogRoot
