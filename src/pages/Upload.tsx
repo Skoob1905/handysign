@@ -84,22 +84,21 @@ export const UploadPage = () => {
 
   const [modalType, setModalType] = useState<"staff" | "agency" | null>(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const handleClick = (typeId: string) => {
+  const handleFileSelect = async (file: File, typeId: string) => {
     if (typeId === "staff") {
+      setPendingFile(file);
       setModalType("staff");
       setAddModalOpen(true);
     } else if (typeId === "clients") {
+      setPendingFile(file);
       setModalType("agency");
       setAddModalOpen(true);
-    }
-  };
-
-  const handleFileSelect = async (file: File, typeId: string) => {
-    if (typeId === "timesheets") {
+    } else if (typeId === "timesheets") {
       if (!file.name.toLowerCase().endsWith(".csv")) {
         toast({
           title: "Invalid file type",
@@ -210,16 +209,7 @@ export const UploadPage = () => {
               description={type.description}
               color={type.color}
               acceptedFiles={type.acceptedFiles}
-              onClick={
-                type.id === "staff" || type.id === "clients"
-                  ? () => handleClick(type.id)
-                  : undefined
-              }
-              onFileSelect={
-                type.id !== "staff" && type.id !== "clients"
-                  ? (file) => handleFileSelect(file, type.id)
-                  : undefined
-              }
+              onFileSelect={(file) => handleFileSelect(file, type.id)}
             />
           ))}
         </div>
@@ -239,7 +229,10 @@ export const UploadPage = () => {
         open={addModalOpen && modalType === "staff"}
         onOpenChange={(open) => {
           setAddModalOpen(open);
-          if (!open) setModalType(null);
+          if (!open) {
+            setModalType(null);
+            setPendingFile(null);
+          }
         }}
         cloudFunction="importStaffCsv"
         storagePath="staff_imports"
@@ -247,13 +240,17 @@ export const UploadPage = () => {
         itemLabelPlural="staff"
         csvType="staff"
         duplicateKey="NI Number"
+        initialFile={modalType === "staff" ? pendingFile : undefined}
       />
 
       <AddModal
         open={addModalOpen && modalType === "agency"}
         onOpenChange={(open) => {
           setAddModalOpen(open);
-          if (!open) setModalType(null);
+          if (!open) {
+            setModalType(null);
+            setPendingFile(null);
+          }
         }}
         cloudFunction="importAgencyCsv"
         storagePath="agency_imports"
@@ -261,6 +258,7 @@ export const UploadPage = () => {
         itemLabelPlural="clients"
         csvType="agency"
         duplicateKey="business_name"
+        initialFile={modalType === "agency" ? pendingFile : undefined}
       />
     </div>
   );
