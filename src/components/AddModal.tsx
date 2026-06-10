@@ -113,6 +113,100 @@ export const AddModal = ({
     if (open) loadTags(true).catch(() => {});
   }, [open, loadTags]);
 
+  const fileProcessedRef = useRef(false);
+  const handleFileRef = useRef<(file: File) => void>(() => {});
+  useEffect(() => {
+    if (open && initialFile && !fileProcessedRef.current) {
+      fileProcessedRef.current = true;
+      handleFileRef.current(initialFile);
+    }
+    if (!open) {
+      fileProcessedRef.current = false;
+    }
+  }, [open, initialFile]);
+
+  const clientFacetFilters = useMemo(
+    () => (isAdmin ? [] : [[`metadata.uploadedBy:${appUser?.agencyId ?? ""}`]]),
+    [isAdmin, appUser?.agencyId],
+  );
+
+  const { items: clients } = usePaginatedRecords({
+    indexName: "clients_name_desc",
+    agencyId: isAdmin ? "all" : (appUser?.agencyId ?? ""),
+    facetFilters: clientFacetFilters,
+    hitsPerPage: 1000,
+  });
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [csvData, setCsvData] = useState<{
+    headers: string[];
+    rows: CsvRow[];
+    fileName: string;
+    rawFile: File;
+  } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [processing, setProcessing] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState<
+    string | undefined
+  >();
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+
+  const tagsMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const tag of tags) {
+      map[tag.id] = tag.value;
+    }
+    return map;
+  }, [tags]);
+
+  const hasAssignment =
+    selectedClientId !== undefined || selectedTagIds.length > 0;
+
+  const selectedClientName = useMemo(() => {
+    if (!selectedClientId) return "";
+    const c = clients.find((c) => c.id === selectedClientId);
+    if (!c) return "Unknown";
+    return (
+      (c.name as string) ||
+      (c.business_name as string) ||
+      (c.Company_Name as string) ||
+      (c.company_name as string) ||
+      (c.agencyName as string) ||
+      findValueByNormalizedKey(
+        c as Record<string, unknown>,
+        "businessname",
+        "companyname",
+        "name",
+        "agencyname",
+        "organisation",
+        "company",
+      ) ||
+      "Unknown"
+    );
+  }, [clients, selectedClientId]);
+
+  useEffect(() => {
+    if (loading) {
+      loadingTimerRef.current = setTimeout(() => {
+        toast({
+          title: "Still uploading...",
+          variant: "info",
+          replaceToast: true,
+        });
+      }, 5000);
+    }
+    return () => {
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+        loadingTimerRef.current = null;
+      }
+    };
+  }, [loading, toast]);
+
   const handleFile = (file: File | undefined) => {
     if (!file) return;
     if (!file.name.toLowerCase().endsWith(".csv")) {
@@ -202,99 +296,7 @@ export const AddModal = ({
     };
     reader.readAsText(file);
   };
-
-  const fileProcessedRef = useRef(false);
-  useEffect(() => {
-    if (open && initialFile && !fileProcessedRef.current) {
-      fileProcessedRef.current = true;
-      handleFile(initialFile);
-    }
-    if (!open) {
-      fileProcessedRef.current = false;
-    }
-  }, [open, initialFile]);
-
-  const clientFacetFilters = useMemo(
-    () => (isAdmin ? [] : [[`metadata.uploadedBy:${appUser?.agencyId ?? ""}`]]),
-    [isAdmin, appUser?.agencyId],
-  );
-
-  const { items: clients } = usePaginatedRecords({
-    indexName: "clients_name_desc",
-    agencyId: isAdmin ? "all" : (appUser?.agencyId ?? ""),
-    facetFilters: clientFacetFilters,
-    hitsPerPage: 1000,
-  });
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [csvData, setCsvData] = useState<{
-    headers: string[];
-    rows: CsvRow[];
-    fileName: string;
-    rawFile: File;
-  } | null>(null);
-  const [loading, setLoading] = useState(false);
-  const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [dragOver, setDragOver] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [processing, setProcessing] = useState(false);
-  const [selectedClientId, setSelectedClientId] = useState<
-    string | undefined
-  >();
-  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
-  const [showAssignModal, setShowAssignModal] = useState(false);
-
-  const tagsMap = useMemo(() => {
-    const map: Record<string, string> = {};
-    for (const tag of tags) {
-      map[tag.id] = tag.value;
-    }
-    return map;
-  }, [tags]);
-
-  const hasAssignment =
-    selectedClientId !== undefined || selectedTagIds.length > 0;
-
-  const selectedClientName = useMemo(() => {
-    if (!selectedClientId) return "";
-    const c = clients.find((c) => c.id === selectedClientId);
-    if (!c) return "Unknown";
-    return (
-      (c.name as string) ||
-      (c.business_name as string) ||
-      (c.Company_Name as string) ||
-      (c.company_name as string) ||
-      (c.agencyName as string) ||
-      findValueByNormalizedKey(
-        c as Record<string, unknown>,
-        "businessname",
-        "companyname",
-        "name",
-        "agencyname",
-        "organisation",
-        "company",
-      ) ||
-      "Unknown"
-    );
-  }, [clients, selectedClientId]);
-
-  useEffect(() => {
-    if (loading) {
-      loadingTimerRef.current = setTimeout(() => {
-        toast({
-          title: "Still uploading...",
-          variant: "info",
-          replaceToast: true,
-        });
-      }, 5000);
-    }
-    return () => {
-      if (loadingTimerRef.current) {
-        clearTimeout(loadingTimerRef.current);
-        loadingTimerRef.current = null;
-      }
-    };
-  }, [loading, toast]);
+  handleFileRef.current = handleFile;
 
   const onUpload = async () => {
     if (!csvData || !appUser) return;
