@@ -84,7 +84,6 @@ export const UploadPage = () => {
 
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [processing, setProcessing] = useState(false);
   const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -238,9 +237,7 @@ export const UploadPage = () => {
         <Card>
           <div className="flex items-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span className="text-sm">
-              {processing ? "Processing..." : "Uploading..."}
-            </span>
+            <span className="text-sm">Uploading...</span>
           </div>
           <ProgressBar value={progress} />
         </Card>
