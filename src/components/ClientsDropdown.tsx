@@ -5,13 +5,14 @@ import { findValueByNormalizedKey } from "../utils/keyHeaderNormalisation";
 
 interface ClientsDropdownProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, name: string) => void;
   disabled?: boolean;
   className?: string;
   placeholder?: string;
   id?: string;
   autoFocus?: boolean;
   onBlur?: () => void;
+  disableWithContract?: boolean;
 }
 
 export const ClientsDropdown = ({
@@ -23,6 +24,7 @@ export const ClientsDropdown = ({
   id,
   autoFocus,
   onBlur,
+  disableWithContract,
 }: ClientsDropdownProps) => {
   const { appUser } = useAuth();
   const isAdmin = appUser?.role === "admin";
@@ -64,7 +66,10 @@ export const ClientsDropdown = ({
     <select
       id={id}
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => {
+        const name = e.target.selectedOptions[0]?.text ?? "";
+        onChange(e.target.value, name);
+      }}
       disabled={disabled}
       autoFocus={autoFocus}
       onBlur={onBlur}
@@ -77,11 +82,15 @@ export const ClientsDropdown = ({
       {!loading && clients.length === 0 && (
         <option disabled>No clients</option>
       )}
-      {clients.map((c) => (
-        <option key={c.id as string} value={c.id as string}>
-          {getClientName(c)}
-        </option>
-      ))}
+      {clients.map((c) => {
+        const meta = c.metadata as Record<string, unknown> | undefined;
+        const hasContract = disableWithContract && !!(meta?.signedContract as string | undefined);
+        return (
+          <option key={c.id as string} value={c.id as string} disabled={hasContract}>
+            {getClientName(c)}{hasContract ? " (Contract uploaded)" : ""}
+          </option>
+        );
+      })}
     </select>
   );
 };

@@ -6,6 +6,7 @@ import { LoadingPage } from "../components/LoadingPage";
 import { LoginPage } from "../pages/LoginPage";
 import { AdminPage } from "../pages/admin/AdminPage";
 import { AdminClientsPage } from "../pages/admin/ClientsPage";
+import { AdminTimesheetsPage } from "../pages/admin/TimesheetsPage";
 import { AdminStaffPage } from "../pages/admin/StaffPage";
 import { UserHomePage } from "../pages/clients/HomePage";
 // import { TimeSheetsPage } from "../pages/clients/TimeSheetsPage";
@@ -13,6 +14,7 @@ import { UserHomePage } from "../pages/clients/HomePage";
 // import { ContractsPage } from "../pages/clients/ContractsPage";
 // import { InvoicesPage } from "../pages/clients/InvoicesPage";
 import { ProfilePage } from "../pages/clients/ProfilePage";
+import { UploadPage } from "../pages/Upload";
 import { RoleGuard } from "./RoleGuard";
 
 const AppEntryRedirect = () => {
@@ -55,11 +57,13 @@ export const AppRouter = () => (
         <Route element={<AppLayout />}>
           <Route path="/staff" element={<StaffPageSwitch />} />
           <Route path="/profile" element={<ProfileSwitch />} />
+          <Route path="/upload" element={<UploadPage />} />
 
           <Route element={<RoleGuard role="admin" />}>
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/clients" element={<AdminClientsPage />} />
+              <Route path="/timesheets" element={<AdminTimesheetsPage />} />
               {/* <Route path="/timesheets" element={<TimeSheetsPage />} /> */}
               {/* <Route path="/payslips" element={<PayslipsPage />} /> */}
               {/* <Route path="/contracts" element={<ContractsPage />} /> */}

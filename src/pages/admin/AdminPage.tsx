@@ -13,6 +13,7 @@ import {
 import { useAuth } from "../../context/AuthProvider";
 import { useToast } from "../../context/ToastProvider";
 import { ClientsDropdown } from "../../components/ClientsDropdown";
+import { Metadata } from "../../components/Metadata";
 import { useAppStore } from "../../stores/appStore";
 import { functions } from "../../services/firebase";
 import { formatInvitedAt } from "../../utils/date";
@@ -20,8 +21,16 @@ import { getCompanyName } from "../../utils/company";
 import { Muted } from "../../config/typography";
 import { PaginatedFilterSection } from "../../components/PaginatedFilterSection";
 import { usePaginatedRecords } from "../../hooks/usePaginatedRecords";
-import { buildFacetFilters, buildFacetRequestFields } from "../../utils/loginsFilter";
-import { emptyFilters, type Agency, type FilterKeyMap, type StaffFilters } from "../../types/domain";
+import {
+  buildFacetFilters,
+  buildFacetRequestFields,
+} from "../../utils/loginsFilter";
+import {
+  emptyFilters,
+  type Agency,
+  type FilterKeyMap,
+  type StaffFilters,
+} from "../../types/domain";
 
 export const AdminPage = () => {
   useEffect(() => {
@@ -111,7 +120,9 @@ export const AdminPage = () => {
   const loginsAgencyCounts = loginsFacetCounts?.assignedTo;
   const filteredLoginsAgencies = useMemo(() => {
     if (!loginsAgencyCounts) return companies;
-    return companies.filter((a) => (loginsAgencyCounts[a.id as string] ?? 0) > 0);
+    return companies.filter(
+      (a) => (loginsAgencyCounts[a.id as string] ?? 0) > 0,
+    );
   }, [loginsAgencyCounts, companies]);
 
   const fetchMissingCompanies = useCallback(async () => {
@@ -317,12 +328,15 @@ export const AdminPage = () => {
               }
             >
               <div className="flex items-center justify-between gap-2">
-                <p className="text-xs sm:text-sm text-zinc-600 truncate">
-                  <span className="font-medium text-[var(--foreground)]">
-                    Invited by:{" "}
-                  </span>
-                  {invitedByEmail} at {formatInvitedAt(userRecord.invitedAt)}
-                </p>
+                <Metadata
+                  title="Invited by"
+                  value={
+                    <>
+                      {invitedByEmail} at{" "}
+                      {formatInvitedAt(userRecord.invitedAt)}
+                    </>
+                  }
+                />
                 <button
                   type="button"
                   onClick={(e) => {
@@ -402,7 +416,7 @@ export const AdminPage = () => {
               <ClientsDropdown
                 id="company"
                 value={selectedCompanyId}
-                onChange={setSelectedCompanyId}
+                onChange={(id) => setSelectedCompanyId(id)}
                 className="w-full rounded-xl border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2 text-xs sm:text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--primary)] focus:bg-[var(--input-focus-bg)]"
               />
             </div>

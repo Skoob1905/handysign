@@ -42,7 +42,7 @@ export function usePaginatedRecords<T = Record<string, unknown>>({
   facetFilters,
   query = "",
   page = 0,
-  hitsPerPage = 50,
+  hitsPerPage = 10,
   facets,
 }: UsePaginatedRecordsParams) {
 
@@ -83,19 +83,15 @@ export function usePaginatedRecords<T = Record<string, unknown>>({
     dispatch({ type: "loading" });
 
     algoliaClient
-      .clearCache()
-      .then(() => {
-        if (cancelled) return;
-        return algoliaClient.searchSingleIndex<T>({
-          indexName: `${ALGOLIA_INDEX_PREFIX}${indexName}`,
-          searchParams: {
-            query,
-            page,
-            hitsPerPage,
-            facetFilters: facetFilters ?? [],
-            facets,
-          },
-        });
+      .searchSingleIndex<T>({
+        indexName: `${ALGOLIA_INDEX_PREFIX}${indexName}`,
+        searchParams: {
+          query,
+          page,
+          hitsPerPage,
+          facetFilters: facetFilters ?? [],
+          facets,
+        },
       })
       .then((response) => {
         if (cancelled || !response) return;
@@ -135,7 +131,7 @@ export function usePaginatedRecords<T = Record<string, unknown>>({
   }, [agencyId, indexName, page, hitsPerPage, refreshKey, query, facetFilters, facets]);
 
   const refresh = useCallback(() => {
-    algoliaClient.clearCache().then(() => setRefreshKey((k) => k + 1));
+    setRefreshKey((k) => k + 1);
   }, []);
 
   return {
