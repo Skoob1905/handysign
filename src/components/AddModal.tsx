@@ -113,6 +113,96 @@ export const AddModal = ({
     if (open) loadTags(true).catch(() => {});
   }, [open, loadTags]);
 
+  const handleFile = (file: File | undefined) => {
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith(".csv")) {
+      toast({
+        title: "Invalid file",
+        description: "Please upload a CSV file.",
+        variant: "error",
+      });
+      return;
+    }
+    if (ALGOLIA_INDEX_PREFIX === "dev_" && file.size > DEV_FILE_SIZE_LIMIT) {
+      toast({
+        title: "File too large",
+        description: "In preview mode, files are limited to 100KB.",
+        variant: "error",
+      });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      if (!text) return;
+      const parsed = parseCsv(text);
+      if (!parsed.headers.length) {
+        toast({
+          title: "Empty CSV",
+          description: "The CSV file has no headers.",
+          variant: "error",
+        });
+        return;
+      }
+      if (!parsed.rows.length) {
+        toast({
+          title: "Empty CSV",
+          description:
+            "The CSV has headers but no data rows. Add data and try again.",
+          variant: "error",
+        });
+        return;
+      }
+
+      if (csvType === "staff") {
+        const normalizedHeaders = parsed.headers.map(normalizeKey);
+        if (!hasNIColumn(parsed.headers)) {
+          console.warn(
+            "[AddModal] No NI column found. Headers:",
+            parsed.headers,
+          );
+          toast({
+            title: "Invalid staff file",
+            description: "The CSV must contain an NI Number column.",
+            variant: "error",
+          });
+          return;
+        }
+        const hasForename = normalizedHeaders.some(
+          (h) => h === "forename" || h === "firstname",
+        );
+        const hasSurname = normalizedHeaders.some(
+          (h) => h === "surname" || h === "lastname",
+        );
+        const hasFullName = normalizedHeaders.some((h) => h === "fullname");
+        if (!(hasForename && hasSurname) && !hasFullName) {
+          toast({
+            title: "Invalid staff file",
+            description:
+              "The CSV must contain First Name + Surname columns, or a Full Name column.",
+            variant: "error",
+          });
+          return;
+        }
+      }
+
+      if (csvType === "agency") {
+        if (!hasBusinessNameColumn(parsed.headers)) {
+          toast({
+            title: "Invalid client file",
+            description:
+              "The CSV must contain a Company/Company Name/Business/Business Name column.",
+            variant: "error",
+          });
+          return;
+        }
+      }
+
+      setCsvData({ ...parsed, fileName: file.name, rawFile: file });
+    };
+    reader.readAsText(file);
+  };
+
   const fileProcessedRef = useRef(false);
   useEffect(() => {
     if (open && initialFile && !fileProcessedRef.current) {
@@ -205,96 +295,6 @@ export const AddModal = ({
       }
     };
   }, [loading, toast]);
-
-  const handleFile = (file: File | undefined) => {
-    if (!file) return;
-    if (!file.name.toLowerCase().endsWith(".csv")) {
-      toast({
-        title: "Invalid file",
-        description: "Please upload a CSV file.",
-        variant: "error",
-      });
-      return;
-    }
-    if (ALGOLIA_INDEX_PREFIX === "dev_" && file.size > DEV_FILE_SIZE_LIMIT) {
-      toast({
-        title: "File too large",
-        description: "In preview mode, files are limited to 100KB.",
-        variant: "error",
-      });
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result as string;
-      if (!text) return;
-      const parsed = parseCsv(text);
-      if (!parsed.headers.length) {
-        toast({
-          title: "Empty CSV",
-          description: "The CSV file has no headers.",
-          variant: "error",
-        });
-        return;
-      }
-      if (!parsed.rows.length) {
-        toast({
-          title: "Empty CSV",
-          description:
-            "The CSV has headers but no data rows. Add data and try again.",
-          variant: "error",
-        });
-        return;
-      }
-
-      if (csvType === "staff") {
-        const normalizedHeaders = parsed.headers.map(normalizeKey);
-        if (!hasNIColumn(parsed.headers)) {
-          console.warn(
-            "[AddModal] No NI column found. Headers:",
-            parsed.headers,
-          );
-          toast({
-            title: "Invalid staff file",
-            description: "The CSV must contain an NI Number column.",
-            variant: "error",
-          });
-          return;
-        }
-        const hasForename = normalizedHeaders.some(
-          (h) => h === "forename" || h === "firstname",
-        );
-        const hasSurname = normalizedHeaders.some(
-          (h) => h === "surname" || h === "lastname",
-        );
-        const hasFullName = normalizedHeaders.some((h) => h === "fullname");
-        if (!(hasForename && hasSurname) && !hasFullName) {
-          toast({
-            title: "Invalid staff file",
-            description:
-              "The CSV must contain First Name + Surname columns, or a Full Name column.",
-            variant: "error",
-          });
-          return;
-        }
-      }
-
-      if (csvType === "agency") {
-        if (!hasBusinessNameColumn(parsed.headers)) {
-          toast({
-            title: "Invalid client file",
-            description:
-              "The CSV must contain a Company/Company Name/Business/Business Name column.",
-            variant: "error",
-          });
-          return;
-        }
-      }
-
-      setCsvData({ ...parsed, fileName: file.name, rawFile: file });
-    };
-    reader.readAsText(file);
-  };
 
   const onUpload = async () => {
     if (!csvData || !appUser) return;
