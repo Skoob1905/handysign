@@ -296,7 +296,9 @@ export const AddModal = ({
     };
     reader.readAsText(file);
   };
-  handleFileRef.current = handleFile;
+  useEffect(() => {
+    handleFileRef.current = handleFile;
+  });
 
   const onUpload = async () => {
     if (!csvData || !appUser) return;
