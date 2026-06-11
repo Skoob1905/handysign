@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
-import { Loader2, Pen, Plus } from "lucide-react";
-import { AddModal } from "../../components/AddModal";
+import { Loader2, Pen } from "lucide-react";
 import { ClientsDropdown } from "../../components/ClientsDropdown";
 import { ImportHistory } from "../../components/ImportHistory";
 import { Metadata } from "../../components/Metadata";
@@ -36,7 +35,6 @@ export const AdminStaffPage = () => {
 
   const { appUser } = useAuth();
   const { toast } = useToast();
-  const [showAddModal, setShowAddModal] = useState(false);
 
   const tags = useAppStore((s) => s.tags);
   const addTag = useAppStore((s) => s.addTag);
@@ -189,24 +187,11 @@ export const AdminStaffPage = () => {
     setTimeout(() => setStaffRefreshTrigger((n) => n + 1), 2000);
   };
 
-  const handleAddSuccess = async () => {
-    setTimeout(() => setStaffRefreshTrigger((n) => n + 1), 2000);
-  };
-
   return (
     <div className="mx-auto space-y-4">
       <StaffListSection
         view="admin"
-        action={
-          <Button
-            type="button"
-            onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-1"
-          >
-            <Plus className="h-4 w-4" />
-            Add
-          </Button>
-        }
+        action={null}
         refreshTrigger={staffRefreshTrigger}
         agencies={companies as unknown as Agency[]}
         renderItem={(member, idx) => (
@@ -489,18 +474,6 @@ export const AdminStaffPage = () => {
         onDeleteSuccess={handleDeleteSuccess}
       />
 
-      <AddModal
-        open={showAddModal}
-        onOpenChange={setShowAddModal}
-        cloudFunction="importStaffCsv"
-        storagePath="staff_imports"
-        itemLabel="staff"
-        itemLabelPlural="staff"
-        csvType="staff"
-        duplicateKey="NI Number"
-        onSuccess={handleAddSuccess}
-        confirmText={(count) => `Import ${count} staff`}
-      />
     </div>
   );
 };
