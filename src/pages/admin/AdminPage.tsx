@@ -26,6 +26,7 @@ import { PaginatedFilterSection } from "../../components/PaginatedFilterSection"
 import { useDualAccordionParams } from "../../hooks/useDualAccordionParams";
 import { usePaginatedRecords } from "../../hooks/usePaginatedRecords";
 import { useFilterParams } from "../../hooks/useFilterParams";
+import { usePaginationParams } from "../../hooks/usePaginationParams";
 import {
   buildFacetFilters,
   buildFacetRequestFields,
@@ -84,8 +85,7 @@ export const AdminPage = () => {
   });
 
   const [loginsFilters, setLoginsFilters] = useFilterParams();
-  const [loginsPage, setLoginsPage] = useState(0);
-  const [loginsPageSize, setLoginsPageSize] = useState(50);
+  const { page: loginsPage, pageSize: loginsPageSize, setPage: setLoginsPage, setPageSize: setLoginsPageSize } = usePaginationParams();
   const { leftValue, rightValue, onLeftChange, onRightChange } = useDualAccordionParams();
 
   const loginsKeyMap = useMemo<FilterKeyMap>(
@@ -265,11 +265,11 @@ export const AdminPage = () => {
       setLoginsPage(0);
       setLoginsFilters(filters);
     },
-    [setLoginsFilters],
+    [setLoginsFilters, setLoginsPage],
   );
 
   return (
-    <div className="mx-auto space-y-4">
+    <div className="flex flex-1 flex-col space-y-4">
       <PaginatedFilterSection
         title="Users"
         items={logins}
@@ -278,13 +278,10 @@ export const AdminPage = () => {
         totalPages={loginsTotalPages}
         totalResults={loginsTotalResults}
         pageSize={loginsPageSize}
-        onPrevPage={() => setLoginsPage((p) => Math.max(0, p - 1))}
-        onNextPage={() => setLoginsPage((p) => p + 1)}
+        onPrevPage={() => setLoginsPage(Math.max(0, loginsPage - 1))}
+        onNextPage={() => setLoginsPage(loginsPage + 1)}
         onGoToPage={setLoginsPage}
-        onPageSizeChange={(s) => {
-          setLoginsPageSize(s);
-          setLoginsPage(0);
-        }}
+        onPageSizeChange={setLoginsPageSize}
         filterKeys={loginsKeyMap}
         filters={loginsFilters}
         onFiltersChange={handleLoginsFiltersChange}

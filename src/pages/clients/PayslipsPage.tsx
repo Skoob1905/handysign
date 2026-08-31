@@ -1,4 +1,4 @@
-import { Section } from "../../components/Section";
+import { Content } from "../../components/Content";
 
 const payslips = [
   { period: "May 2026", gross: "£3,200.00", ni: "£180.40", tax: "£420.00", net: "£2,599.60", status: "Paid" },
@@ -10,7 +10,7 @@ const payslips = [
 
 export const PayslipsPage = () => (
   <div className="space-y-4">
-    <Section title="Payslips">
+    <Content title="Payslips">
       <div className="space-y-2">
         {payslips.map((p) => (
           <div key={p.period} className="flex items-center justify-between rounded-xl border border-[var(--border)] p-3">
@@ -34,6 +34,6 @@ export const PayslipsPage = () => (
           </div>
         ))}
       </div>
-    </Section>
+    </Content>
   </div>
 );

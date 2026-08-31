@@ -11,7 +11,6 @@ import { AdminInvoicesPage } from "../pages/admin/InvoicesPage";
 import { AdminStaffPage } from "../pages/admin/StaffPage";
 import { UserHomePage } from "../pages/clients/HomePage";
 import { InvoicesPage } from "../pages/clients/InvoicesPage";
-import { ProfilePage } from "../pages/clients/ProfilePage";
 import { SupportPage } from "../pages/clients/SupportPage";
 import { TimeSheetsPage } from "../pages/clients/TimeSheetsPage";
 import { UploadPage } from "../pages/Upload";
@@ -37,12 +36,6 @@ const StaffPageSwitch = () => {
   return <UserHomePage />;
 };
 
-const ProfileSwitch = () => {
-  const { appUser } = useAuth();
-  if (!appUser) return <Navigate to="/login" replace />;
-  return <ProfilePage />;
-};
-
 const InvoicesSwitch = () => {
   const { appUser } = useAuth();
   if (!appUser) return <Navigate to="/login" replace />;
@@ -65,7 +58,6 @@ export const AppRouter = () => (
       <Route element={<RoleGuard role="authenticated" />}>
         <Route element={<AppLayout />}>
           <Route path="/staff" element={<StaffPageSwitch />} />
-          <Route path="/profile" element={<ProfileSwitch />} />
           <Route path="/upload" element={<UploadPage />} />
           <Route path="/invoices" element={<InvoicesSwitch />} />
           <Route path="/timesheets" element={<TimesheetsSwitch />} />

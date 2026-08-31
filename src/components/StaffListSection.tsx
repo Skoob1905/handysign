@@ -3,7 +3,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
   type ReactNode,
 } from "react";
 import { AccordionItem } from "./ui";
@@ -13,6 +12,7 @@ import { formatInvitedAt } from "../utils/date";
 import { PaginatedFilterSection } from "./PaginatedFilterSection";
 import { usePaginatedRecords } from "../hooks/usePaginatedRecords";
 import { useFilterParams } from "../hooks/useFilterParams";
+import { usePaginationParams } from "../hooks/usePaginationParams";
 import { getStaffName } from "../utils/keyHeaderNormalisation";
 import { FileInteractionButtons } from "./FileInteractionButtons";
 import { Metadata } from "./Metadata";
@@ -61,8 +61,7 @@ export const StaffListSection = ({
   const tags = useAppStore((s) => s.tags);
   const loadTags = useAppStore((s) => s.loadTags);
   const [filters, setFilters] = useFilterParams();
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const { page, pageSize, setPage, setPageSize } = usePaginationParams();
   const isClient = view === "client";
   const assignedToId = targetAgencyId || appUser?.agencyId || "";
   const staffKeyMap = useMemo<FilterKeyMap>(
@@ -132,7 +131,7 @@ export const StaffListSection = ({
       setPage(0);
       setFilters(newFilters);
     },
-    [setFilters],
+    [setFilters, setPage],
   );
 
   const defaultRenderItem = useCallback(
@@ -248,13 +247,10 @@ export const StaffListSection = ({
       totalPages={totalPages}
       totalResults={totalResults}
       pageSize={pageSize}
-      onPrevPage={() => setPage((p) => Math.max(0, p - 1))}
-      onNextPage={() => setPage((p) => p + 1)}
+      onPrevPage={() => setPage(Math.max(0, page - 1))}
+      onNextPage={() => setPage(page + 1)}
       onGoToPage={setPage}
-      onPageSizeChange={(s) => {
-        setPageSize(s);
-        setPage(0);
-      }}
+      onPageSizeChange={setPageSize}
       filters={filters}
       onFiltersChange={handleFiltersChange}
       tags={filterTagsMap}

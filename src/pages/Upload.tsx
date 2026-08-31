@@ -17,7 +17,7 @@ import { AddModal } from "../components/AddModal";
 import { FileDrop } from "../components/FileDrop";
 import { PreviewModal } from "../components/PreviewModal";
 import { CVUploadModal } from "../components/CVUploadModal";
-import { Section } from "../components/Section";
+import { Content } from "../components/Content";
 import { useAuth } from "../context/AuthProvider";
 import { useToast } from "../context/ToastProvider";
 import { functions } from "../services/firebase";
@@ -303,8 +303,8 @@ export const UploadPage = () => {
   );
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
-      <Section title="Upload">
+    <div className="flex flex-1 flex-col space-y-4">
+      <Content title="Upload">
         <div className="flex flex-wrap justify-center gap-3">
           {types.map((type) => (
             <div
@@ -337,7 +337,7 @@ export const UploadPage = () => {
             </div>
           ))}
         </div>
-      </Section>
+      </Content>
 
       <AddModal
         open={showAddModal}

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
-import { Card } from "./ui";
 
-interface SectionProps {
+interface ContentProps {
   title: string;
   count?: number;
   action?: ReactNode;
@@ -9,8 +8,10 @@ interface SectionProps {
   className?: string;
 }
 
-export const Section = ({ title, count, action, children, className }: SectionProps) => (
-  <Card className={className}>
+export const Content = ({ title, count, action, children, className }: ContentProps) => (
+  <div
+    className={`w-full flex-1 p-3 sm:p-4 ${className ?? ""}`}
+  >
     <div className="flex items-center justify-between">
       <h2 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
         {title}
@@ -19,5 +20,5 @@ export const Section = ({ title, count, action, children, className }: SectionPr
       {action && <div className="flex items-center gap-2">{action}</div>}
     </div>
     <div className="mt-1.5 sm:mt-3">{children}</div>
-  </Card>
+  </div>
 );

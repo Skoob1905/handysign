@@ -1,7 +1,7 @@
 # Component Glossary
 
-## Section
-A generic card container with an optional title, count badge, and CTA action. Wraps children in the base Card component.
+## Content
+The main content container for a page with an optional title, count badge, and CTA action. Rendered with padded card background and no border.
 
 - `title` — heading text
 - `count` — optional number shown as `"Title (count)"`
@@ -9,7 +9,7 @@ A generic card container with an optional title, count badge, and CTA action. Wr
 - `children` — body content
 
 ## PaginatedSection
-Extends Section with data fetching, accordion rendering, and pagination. Takes items from an external hook and renders them in an accordion with a pagination bar.
+Extends Content with data fetching, accordion rendering, and pagination. Takes items from an external hook and renders them in an accordion with a pagination bar.
 
 - `items` — data array
 - `loading` — loading state

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Section } from "../../components/Section";
+import { Content } from "../../components/Content";
 import { InformationCard } from "../../components/InformationCard";
 import { Button } from "../../components/ui";
 import { useAuth } from "../../context/AuthProvider";
@@ -33,8 +33,8 @@ export const TimeSheetsPage = () => {
   }, [loading, appUser?.agencyId, myTimesheets, markSeen]);
 
   return (
-    <div className="mx-auto space-y-4">
-      <Section title="Timesheets">
+    <div className="flex flex-1 flex-col space-y-4">
+      <Content title="Timesheets">
         {loading ? (
           <p className="text-sm text-zinc-500">Loading...</p>
         ) : myTimesheets.length === 0 ? (
@@ -68,7 +68,7 @@ export const TimeSheetsPage = () => {
             ))}
           </div>
         )}
-      </Section>
+      </Content>
     </div>
   );
 };

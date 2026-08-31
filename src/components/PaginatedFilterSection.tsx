@@ -3,7 +3,7 @@ import { Filter } from "lucide-react";
 import { AccordionRoot } from "./ui";
 import { FilterModal } from "./FilterModal";
 import { PaginationBar } from "./PaginationBar";
-import { Section } from "./Section";
+import { Content } from "./Content";
 import { Muted } from "../config/typography";
 import type { Agency, FilterKeyMap, StaffFilters } from "../types/domain";
 
@@ -119,7 +119,7 @@ export const PaginatedFilterSection = <T,>({
 
   return (
     <>
-      <Section title={title} count={totalResults} action={renderHeaderAction()}>
+      <Content title={title} count={totalResults} action={renderHeaderAction()}>
         {loading && items.length === 0 ? (
           <Muted>Loading...</Muted>
         ) : items.length === 0 ? (
@@ -167,7 +167,7 @@ export const PaginatedFilterSection = <T,>({
             />
           </div>
         )}
-      </Section>
+      </Content>
 
       <FilterModal
         open={showFilterModal}

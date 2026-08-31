@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { AccordionRoot } from "./ui";
 import { PaginationBar } from "./PaginationBar";
-import { Section } from "./Section";
+import { Content } from "./Content";
 import { Muted } from "../config/typography";
 
 interface PaginatedSectionProps<T> {
@@ -37,7 +37,7 @@ export const PaginatedSection = <T,>({
   onGoToPage,
   onPageSizeChange,
 }: PaginatedSectionProps<T>) => (
-  <Section title={title} count={totalResults} action={action}>
+  <Content title={title} count={totalResults} action={action}>
     {loading && items.length === 0 ? (
       <Muted>Loading...</Muted>
     ) : items.length === 0 ? (
@@ -62,5 +62,5 @@ export const PaginatedSection = <T,>({
           />
       </div>
     )}
-  </Section>
+  </Content>
 );
