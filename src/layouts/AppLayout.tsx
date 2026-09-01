@@ -53,7 +53,10 @@ export const AppLayout = () => {
             </div>
           </header>
 
-          <main className="flex flex-1 flex-col px-4 py-3 sm:py-6">
+          <main
+            className="flex flex-1 flex-col px-4 py-3 sm:py-6"
+            style={{ backgroundColor: "var(--muted)" }}
+          >
             <Outlet />
           </main>
         </div>

@@ -10,7 +10,7 @@ interface ContentProps {
 
 export const Content = ({ title, count, action, children, className }: ContentProps) => (
   <div
-    className={`w-full rounded-[var(--radius)] bg-[var(--muted)] p-3 sm:p-4 ${className ?? ""}`}
+    className={`flex w-full flex-col rounded-[var(--radius)] bg-[var(--card)] p-3 sm:p-4 ${className ?? ""}`}
   >
     <div className="flex items-start justify-between">
       <h2 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
