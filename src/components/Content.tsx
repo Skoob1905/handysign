@@ -12,7 +12,7 @@ export const Content = ({ title, count, action, children, className }: ContentPr
   <div
     className={`w-full rounded-[var(--radius)] bg-[var(--muted)] p-3 sm:p-4 ${className ?? ""}`}
   >
-    <div className="flex items-center justify-between">
+    <div className="flex items-start justify-between">
       <h2 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
         {title}
         {count !== undefined && ` (${count})`}

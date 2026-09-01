@@ -39,7 +39,7 @@ export const Navbar = ({ open, onClose }: NavbarProps) => {
           <X className="size-5" />
         </button>
 
-        <div className="flex justify-center px-4 pt-6 pb-4">
+        <div className="flex justify-center px-4 pt-6 pb-12">
           <a
             href={config.homepage || "/"}
             target="_blank"
@@ -53,7 +53,7 @@ export const Navbar = ({ open, onClose }: NavbarProps) => {
           </a>
         </div>
 
-        <nav className="flex flex-1 flex-col gap-1.5 px-2">
+        <nav className="flex flex-1 flex-col gap-3 px-2">
           <NavbarItems
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
