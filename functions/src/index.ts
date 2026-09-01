@@ -40,6 +40,7 @@ import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
 
 initializeApp();
+console.log("test");
 
 const WEB_API_KEY = defineString("WEB_API_KEY");
 const RESET_CONTINUE_URL = defineString("RESET_CONTINUE_URL");
@@ -137,7 +138,7 @@ export const invitePortalUser = onCall(async (request) => {
   if (!emailPattern.test(email)) {
     throw new HttpsError(
       "invalid-argument",
-      "Please enter a valid email address.",
+      "Please enter a valid email address."
     );
   }
 
@@ -179,7 +180,7 @@ export const invitePortalUser = onCall(async (request) => {
   if (!existingAwaiting.empty) {
     throw new HttpsError(
       "already-exists",
-      "Email is already awaiting registration.",
+      "Email is already awaiting registration."
     );
   }
 
@@ -193,7 +194,7 @@ export const invitePortalUser = onCall(async (request) => {
     } else if (authErr.code === "auth/invalid-email") {
       throw new HttpsError(
         "invalid-argument",
-        "Please enter a valid email address.",
+        "Please enter a valid email address."
       );
     } else {
       throw err;
@@ -210,7 +211,7 @@ export const invitePortalUser = onCall(async (request) => {
       status: "awaiting",
       invitedAt: FieldValue.serverTimestamp(),
     },
-    { merge: true },
+    { merge: true }
   );
 
   // Ensure invited staff can authenticate into the app
@@ -225,13 +226,13 @@ export const invitePortalUser = onCall(async (request) => {
       invitedByUid: callerUid,
       invitedAt: FieldValue.serverTimestamp(),
     },
-    { merge: true },
+    { merge: true }
   );
 
   // Triggers Firebase password-reset email template
   // (used as set-password invite).
   const continueUrl = String(
-    request.data?.continueUrl || RESET_CONTINUE_URL.value(),
+    request.data?.continueUrl || RESET_CONTINUE_URL.value()
   );
 
   const resp = await fetch(
@@ -244,7 +245,7 @@ export const invitePortalUser = onCall(async (request) => {
         email,
         continueUrl,
       }),
-    },
+    }
   );
 
   if (!resp.ok) {
@@ -257,7 +258,7 @@ export const invitePortalUser = onCall(async (request) => {
     });
     throw new HttpsError(
       "internal",
-      "Failed to send password reset email. Please try again later.",
+      "Failed to send password reset email. Please try again later."
     );
   }
 
@@ -273,7 +274,7 @@ export const assignClientLogin = onCall(async (request) => {
   if (!emailPattern.test(email)) {
     throw new HttpsError(
       "invalid-argument",
-      "Please enter a valid email address.",
+      "Please enter a valid email address."
     );
   }
 
@@ -327,7 +328,7 @@ export const assignClientLogin = onCall(async (request) => {
   if (!existingAwaiting.empty) {
     throw new HttpsError(
       "already-exists",
-      "Email is already awaiting registration.",
+      "Email is already awaiting registration."
     );
   }
 
@@ -341,7 +342,7 @@ export const assignClientLogin = onCall(async (request) => {
     } else if (authErr.code === "auth/invalid-email") {
       throw new HttpsError(
         "invalid-argument",
-        "Please enter a valid email address.",
+        "Please enter a valid email address."
       );
     } else {
       throw err;
@@ -358,11 +359,11 @@ export const assignClientLogin = onCall(async (request) => {
       invitedByUid: callerUid,
       invitedAt: FieldValue.serverTimestamp(),
     },
-    { merge: true },
+    { merge: true }
   );
 
   const continueUrl = String(
-    request.data?.continueUrl || RESET_CONTINUE_URL.value(),
+    request.data?.continueUrl || RESET_CONTINUE_URL.value()
   );
 
   const resp = await fetch(
@@ -375,7 +376,7 @@ export const assignClientLogin = onCall(async (request) => {
         email,
         continueUrl,
       }),
-    },
+    }
   );
 
   if (!resp.ok) {
@@ -388,7 +389,7 @@ export const assignClientLogin = onCall(async (request) => {
     });
     throw new HttpsError(
       "internal",
-      "Failed to send password reset email. Please try again later.",
+      "Failed to send password reset email. Please try again later."
     );
   }
 
@@ -400,7 +401,7 @@ export const sendPasswordReset = onCall(async (request) => {
   if (!email) throw new HttpsError("invalid-argument", "Email is required.");
 
   const continueUrl = String(
-    request.data?.continueUrl || RESET_CONTINUE_URL.value(),
+    request.data?.continueUrl || RESET_CONTINUE_URL.value()
   );
 
   const resp = await fetch(
@@ -413,7 +414,7 @@ export const sendPasswordReset = onCall(async (request) => {
         email,
         continueUrl,
       }),
-    },
+    }
   );
 
   if (!resp.ok) {
@@ -426,7 +427,7 @@ export const sendPasswordReset = onCall(async (request) => {
     });
     throw new HttpsError(
       "internal",
-      "Failed to send password reset email. Please try again later.",
+      "Failed to send password reset email. Please try again later."
     );
   }
 
@@ -465,7 +466,7 @@ export const removeUnregisteredStaffUser = onCall(async (request) => {
   if (!awaitingSnap.exists) {
     throw new HttpsError(
       "not-found",
-      "Awaiting registration record not found.",
+      "Awaiting registration record not found."
     );
   }
 
@@ -473,7 +474,7 @@ export const removeUnregisteredStaffUser = onCall(async (request) => {
   if (awaitingData.agencyId !== caller.agencyId) {
     throw new HttpsError(
       "permission-denied",
-      "Cannot remove users from another agency.",
+      "Cannot remove users from another agency."
     );
   }
 
@@ -521,13 +522,13 @@ export const registerStaffProfile = onCall(async (request) => {
   if (!firstName || !lastName || !birthday || !address) {
     throw new HttpsError(
       "invalid-argument",
-      "All registration fields are required.",
+      "All registration fields are required."
     );
   }
   if (!honestyConfirmed) {
     throw new HttpsError(
       "invalid-argument",
-      "You must confirm that your answers are honest.",
+      "You must confirm that your answers are honest."
     );
   }
   if (firstName.length < 2 || !namePattern.test(firstName)) {
@@ -549,7 +550,7 @@ export const registerStaffProfile = onCall(async (request) => {
   if (address.length < 8) {
     throw new HttpsError(
       "invalid-argument",
-      "Address must be at least 8 characters.",
+      "Address must be at least 8 characters."
     );
   }
 
@@ -559,7 +560,7 @@ export const registerStaffProfile = onCall(async (request) => {
   if (!awaitingSnap.exists) {
     throw new HttpsError(
       "failed-precondition",
-      "No awaiting registration record found.",
+      "No awaiting registration record found."
     );
   }
 
@@ -571,7 +572,7 @@ export const registerStaffProfile = onCall(async (request) => {
   if (!awaiting.agencyId || !awaiting.email) {
     throw new HttpsError(
       "failed-precondition",
-      "Awaiting registration record is incomplete.",
+      "Awaiting registration record is incomplete."
     );
   }
 
@@ -609,7 +610,7 @@ export const registerStaffProfile = onCall(async (request) => {
         honestyConfirmed: true,
         registeredAt: FieldValue.serverTimestamp(),
       },
-      { merge: true },
+      { merge: true }
     );
 
   await awaitingRef.delete();
@@ -651,7 +652,7 @@ export const markContractSent = onCall(async (request) => {
   if (target.agencyId !== caller.agencyId) {
     throw new HttpsError(
       "permission-denied",
-      "Target user is not in your agency.",
+      "Target user is not in your agency."
     );
   }
 
@@ -664,7 +665,7 @@ export const markContractSent = onCall(async (request) => {
         contractSent: FieldValue.serverTimestamp(),
         contractSentBy: caller.email ?? "Unknown",
       },
-      { merge: true },
+      { merge: true }
     );
 
   return { ok: true };
@@ -681,7 +682,7 @@ export const markContractSigned = onCall(async (request) => {
   if (!contractId || !signedFileName || !signedFileUrl) {
     throw new HttpsError(
       "invalid-argument",
-      "contractId, signedFileName and signedFileUrl are required.",
+      "contractId, signedFileName and signedFileUrl are required."
     );
   }
 
@@ -740,7 +741,7 @@ export const markContractSigned = onCall(async (request) => {
       contractSigned: true,
       contractSignedAt: FieldValue.serverTimestamp(),
     },
-    { merge: true },
+    { merge: true }
   );
 
   return { ok: true, contractId };
@@ -815,7 +816,7 @@ export const updatePayslipDownloadedStatus = onCall(async (request) => {
       hasDownloaded: true,
       downloadedAt: FieldValue.serverTimestamp(),
     },
-    { merge: true },
+    { merge: true }
   );
 
   return { ok: true, payslipId };
@@ -844,7 +845,7 @@ export const importAgencyCsv = onCall(async (request) => {
   if (!Array.isArray(records) || records.length === 0) {
     throw new HttpsError(
       "invalid-argument",
-      "A non-empty records array is required.",
+      "A non-empty records array is required."
     );
   }
 
@@ -959,7 +960,7 @@ export const importStaffCsv = onCall(async (request) => {
   if (!Array.isArray(records) || records.length === 0) {
     throw new HttpsError(
       "invalid-argument",
-      "A non-empty records array is required.",
+      "A non-empty records array is required."
     );
   }
 
@@ -998,7 +999,7 @@ export const importStaffCsv = onCall(async (request) => {
   const assignedToName =
     assignedToNameInput ||
     (callerAgencySnap?.exists
-      ? ((callerAgencySnap.data() as { name?: string }).name ?? "")
+      ? (callerAgencySnap.data() as { name?: string }).name ?? ""
       : "");
 
   const tagIds = request.data?.tagIds as string[] | undefined;
@@ -1134,7 +1135,7 @@ export const assignStaffToAgency = onCall(async (request) => {
   if (!staffId || !assignedToId || !assignedToName) {
     throw new HttpsError(
       "invalid-argument",
-      "staffId, assignedToId, and assignedToName are required.",
+      "staffId, assignedToId, and assignedToName are required."
     );
   }
 
@@ -1150,7 +1151,7 @@ export const assignStaffToAgency = onCall(async (request) => {
           assignedAt: FieldValue.serverTimestamp(),
         },
       },
-      { merge: true },
+      { merge: true }
     );
 
   await db
@@ -1172,7 +1173,7 @@ export const deleteUserContract = onCall(async (request) => {
   if (!targetUserId || (mode !== "unsigned" && mode !== "signed")) {
     throw new HttpsError(
       "invalid-argument",
-      "targetUserId and mode (unsigned|signed) are required.",
+      "targetUserId and mode (unsigned|signed) are required."
     );
   }
 
@@ -1195,7 +1196,7 @@ export const deleteUserContract = onCall(async (request) => {
   if (target.agencyId !== caller.agencyId) {
     throw new HttpsError(
       "permission-denied",
-      "Target user is not in your agency.",
+      "Target user is not in your agency."
     );
   }
 
@@ -1243,7 +1244,7 @@ export const deleteUserContract = onCall(async (request) => {
       contractSigned: FieldValue.delete(),
       contractSignedAt: FieldValue.delete(),
     },
-    { merge: true },
+    { merge: true }
   );
 
   return { ok: true, targetUserId, mode };
@@ -1312,10 +1313,10 @@ export const bulkUploadStaff = onCall(async (request) => {
     }
 
     let forename = String(
-      row.forename || row.firstname || row.Forename || "",
+      row.forename || row.firstname || row.Forename || ""
     ).trim();
     let surname = String(
-      row.surname || row.lastname || row.Surname || "",
+      row.surname || row.lastname || row.Surname || ""
     ).trim();
     const fullname = String(row.fullname || row.FullName || "").trim();
     const title = String(row.title || "").trim();
@@ -1412,7 +1413,7 @@ export const removeAgencies = onCall(async (request) => {
   if (importData.fileUrl) {
     try {
       const filePath = decodeURIComponent(
-        importData.fileUrl.split("/o/")[1]?.split("?")[0] ?? "",
+        importData.fileUrl.split("/o/")[1]?.split("?")[0] ?? ""
       );
       if (filePath) {
         await getStorage().bucket().file(filePath).delete();
@@ -1502,7 +1503,7 @@ export const removeStaffImport = onCall(async (request) => {
   if (importData.fileUrl) {
     try {
       const filePath = decodeURIComponent(
-        importData.fileUrl.split("/o/")[1]?.split("?")[0] ?? "",
+        importData.fileUrl.split("/o/")[1]?.split("?")[0] ?? ""
       );
       if (filePath) {
         await getStorage().bucket().file(filePath).delete();
@@ -1661,7 +1662,7 @@ export const unassignStaffFromAgency = onCall(async (request) => {
           assignedAt: FieldValue.delete(),
         },
       },
-      { merge: true },
+      { merge: true }
     );
 
   await db
@@ -1773,7 +1774,7 @@ export const uploadSignedContract = onCall(
     if (!fileBase64 || !fileName || !clientId) {
       throw new HttpsError(
         "invalid-argument",
-        "Missing required fields: fileBase64, fileName, clientId",
+        "Missing required fields: fileBase64, fileName, clientId"
       );
     }
 
@@ -1792,7 +1793,9 @@ export const uploadSignedContract = onCall(
       },
     });
 
-    const downloadUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
+    const downloadUrl = `https://firebasestorage.googleapis.com/v0/b/${
+      bucket.name
+    }/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
 
     await getFirestore().collection("agencies").doc(clientId).update({
       "metadata.signedContractName": fileName,
@@ -1801,7 +1804,7 @@ export const uploadSignedContract = onCall(
     });
 
     return { ok: true, url: downloadUrl };
-  },
+  }
 );
 
 export const deleteContract = onCall(async (request) => {
@@ -1840,7 +1843,7 @@ export const deleteContract = onCall(async (request) => {
   if (clientData.metadata?.signedContract) {
     try {
       const filePath = decodeURIComponent(
-        clientData.metadata.signedContract.split("/o/")[1]?.split("?")[0] ?? "",
+        clientData.metadata.signedContract.split("/o/")[1]?.split("?")[0] ?? ""
       );
       if (filePath) {
         await getStorage().bucket().file(filePath).delete();
@@ -1867,7 +1870,7 @@ export const recordTimesheetUpload = onCall(async (request) => {
   if (!clientId || !fileName || !fileBase64) {
     throw new HttpsError(
       "invalid-argument",
-      "Missing required fields: clientId, fileName, fileBase64",
+      "Missing required fields: clientId, fileName, fileBase64"
     );
   }
 
@@ -1888,7 +1891,7 @@ export const recordTimesheetUpload = onCall(async (request) => {
   if (callerData.role === "client" && callerData.agencyId !== clientId) {
     throw new HttpsError(
       "permission-denied",
-      "Cannot upload timesheet for another client.",
+      "Cannot upload timesheet for another client."
     );
   }
 
@@ -1900,7 +1903,7 @@ export const recordTimesheetUpload = onCall(async (request) => {
 
   const [fileExists] = await fileRef.exists();
   console.log(
-    `[recordTimesheetUpload] fileRef.exists() returned: ${fileExists}`,
+    `[recordTimesheetUpload] fileRef.exists() returned: ${fileExists}`
   );
 
   if (!fileExists) {
@@ -1910,23 +1913,23 @@ export const recordTimesheetUpload = onCall(async (request) => {
     const existingNames = files.map((f) => f.name);
     console.log(
       `[recordTimesheetUpload] Files in timesheets/${clientId}/:`,
-      JSON.stringify(existingNames),
+      JSON.stringify(existingNames)
     );
     console.log(
-      `[recordTimesheetUpload] Looking for: timesheets/${clientId}/${fileName}`,
+      `[recordTimesheetUpload] Looking for: timesheets/${clientId}/${fileName}`
     );
     const match = existingNames.find(
-      (n) => n === `timesheets/${clientId}/${fileName}`,
+      (n) => n === `timesheets/${clientId}/${fileName}`
     );
     console.log(
-      `[recordTimesheetUpload] Manual match result: ${match ?? "none"}`,
+      `[recordTimesheetUpload] Manual match result: ${match ?? "none"}`
     );
   }
 
   if (fileExists) {
     throw new HttpsError(
       "already-exists",
-      `A timesheet named "${fileName}" has already been uploaded.`,
+      `A timesheet named "${fileName}" has already been uploaded.`
     );
   }
 
@@ -1944,11 +1947,13 @@ export const recordTimesheetUpload = onCall(async (request) => {
   } catch {
     throw new HttpsError(
       "internal",
-      "Failed to save file to storage. The timesheet has not been uploaded.",
+      "Failed to save file to storage. The timesheet has not been uploaded."
     );
   }
 
-  const fileUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
+  const fileUrl = `https://firebasestorage.googleapis.com/v0/b/${
+    bucket.name
+  }/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
 
   const entry = {
     uploadedBy,
@@ -1983,14 +1988,14 @@ export const seenItems = onCall(async (request) => {
   if (!type || !Array.isArray(ids) || ids.length === 0 || !agencyId) {
     throw new HttpsError(
       "invalid-argument",
-      "type ('invoices' | 'timesheets'), a non-empty ids array, and agencyId are required.",
+      "type ('invoices' | 'timesheets'), a non-empty ids array, and agencyId are required."
     );
   }
 
   if (type !== "invoices" && type !== "timesheets") {
     throw new HttpsError(
       "invalid-argument",
-      "type must be 'invoices' or 'timesheets'.",
+      "type must be 'invoices' or 'timesheets'."
     );
   }
 
@@ -2040,14 +2045,14 @@ export const setDownloaded = onCall(async (request) => {
   if (!type || !agencyId || !Array.isArray(ids) || ids.length === 0) {
     throw new HttpsError(
       "invalid-argument",
-      "type ('invoices' | 'timesheets'), agencyId, and a non-empty ids array are required.",
+      "type ('invoices' | 'timesheets'), agencyId, and a non-empty ids array are required."
     );
   }
 
   if (type !== "invoices" && type !== "timesheets") {
     throw new HttpsError(
       "invalid-argument",
-      "type must be 'invoices' or 'timesheets'.",
+      "type must be 'invoices' or 'timesheets'."
     );
   }
 
@@ -2090,7 +2095,7 @@ export const deleteTimesheet = onCall(async (request) => {
   if (!clientId || !fileName) {
     throw new HttpsError(
       "invalid-argument",
-      "Missing required fields: clientId, fileName",
+      "Missing required fields: clientId, fileName"
     );
   }
 
@@ -2142,7 +2147,7 @@ export const uploadStaffCvs = onCall(async (request) => {
   if (!cvs || !Array.isArray(cvs) || cvs.length === 0) {
     throw new HttpsError(
       "invalid-argument",
-      "Missing required field: cvs (non-empty array)",
+      "Missing required field: cvs (non-empty array)"
     );
   }
 
@@ -2205,7 +2210,9 @@ export const uploadStaffCvs = onCall(async (request) => {
         },
       });
 
-      const fileUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
+      const fileUrl = `https://firebasestorage.googleapis.com/v0/b/${
+        bucket.name
+      }/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
 
       const entry = {
         fileName,
@@ -2242,7 +2249,7 @@ export const deleteStaffCv = onCall(async (request) => {
   if (!staffId || !fileName) {
     throw new HttpsError(
       "invalid-argument",
-      "Missing required fields: staffId, fileName",
+      "Missing required fields: staffId, fileName"
     );
   }
 
@@ -2321,7 +2328,7 @@ export const syncAgencyToAlgolia = onDocumentWritten(
       body: { objectID: event.params.docId, ...data, sortableName },
     });
     console.log(`Saved agency ${event.params.docId} to clients index`);
-  },
+  }
 );
 
 // ── Staff → staff index ──
@@ -2354,7 +2361,7 @@ export const syncStaffToAlgolia = onDocumentWritten(
       body: { objectID: event.params.docId, ...data, sortableName },
     });
     console.log(`Saved staff ${event.params.docId} to staff index`);
-  },
+  }
 );
 
 // ── Users → logins index (only role=client) ──
@@ -2378,7 +2385,7 @@ export const syncClientUserToAlgolia = onDocumentWritten(
       });
       console.log(
         "Deleted user" +
-          ` ${event.params.docId} from logins index (no longer client)`,
+          ` ${event.params.docId} from logins index (no longer client)`
       );
       return;
     }
@@ -2397,7 +2404,7 @@ export const syncClientUserToAlgolia = onDocumentWritten(
       },
     });
     console.log(`Saved user ${event.params.docId} to logins index`);
-  },
+  }
 );
 
 export const backfillAlgoliaIndices = onCall(
@@ -2483,7 +2490,7 @@ export const backfillAlgoliaIndices = onCall(
       agenciesBackfilled: totalAgencies,
       loginsBackfilled: totalLogins,
     };
-  },
+  }
 );
 
 export const uploadInvoice = onCall(async (request) => {
@@ -2503,13 +2510,13 @@ export const uploadInvoice = onCall(async (request) => {
   if (!fileBase64 || !fileName || !agencyId) {
     throw new HttpsError(
       "invalid-argument",
-      "Missing required fields: fileBase64, fileName, agencyId",
+      "Missing required fields: fileBase64, fileName, agencyId"
     );
   }
   if (!dueDate || !amountPayable) {
     throw new HttpsError(
       "invalid-argument",
-      "dueDate and amountPayable are required.",
+      "dueDate and amountPayable are required."
     );
   }
 
@@ -2535,7 +2542,7 @@ export const uploadInvoice = onCall(async (request) => {
     if (existing.some((inv) => inv.fileName === fileName)) {
       throw new HttpsError(
         "already-exists",
-        `An invoice named "${fileName}" already exists.`,
+        `An invoice named "${fileName}" already exists.`
       );
     }
   }
@@ -2559,7 +2566,9 @@ export const uploadInvoice = onCall(async (request) => {
     throw new HttpsError("internal", "Failed to save file to storage.");
   }
 
-  const fileUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
+  const fileUrl = `https://firebasestorage.googleapis.com/v0/b/${
+    bucket.name
+  }/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
 
   const entry = {
     id: filePath,
@@ -2609,7 +2618,7 @@ export const markInvoicePaid = onCall(async (request) => {
   if (!agencyId || !invoiceId) {
     throw new HttpsError(
       "invalid-argument",
-      "agencyId and invoiceId are required.",
+      "agencyId and invoiceId are required."
     );
   }
 
@@ -2665,7 +2674,7 @@ export const deleteInvoice = onCall(async (request) => {
   if (!agencyId || !invoiceId) {
     throw new HttpsError(
       "invalid-argument",
-      "agencyId and invoiceId are required.",
+      "agencyId and invoiceId are required."
     );
   }
 
@@ -2682,8 +2691,7 @@ export const deleteInvoice = onCall(async (request) => {
 
   const target = current.find(
     (inv) =>
-      (inv.id as string) === invoiceId ||
-      (inv.fileName as string) === invoiceId,
+      (inv.id as string) === invoiceId || (inv.fileName as string) === invoiceId
   );
 
   if (target) {
@@ -2699,8 +2707,7 @@ export const deleteInvoice = onCall(async (request) => {
 
   const updated = current.filter(
     (inv) =>
-      (inv.id as string) !== invoiceId &&
-      (inv.fileName as string) !== invoiceId,
+      (inv.id as string) !== invoiceId && (inv.fileName as string) !== invoiceId
   );
 
   await agencyRef.update({
