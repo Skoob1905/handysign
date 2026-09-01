@@ -22,7 +22,7 @@ export const Navbar = ({ open, onClose }: NavbarProps) => {
       />
 
       <aside
-        className={`fixed left-0 top-0 z-30 flex h-full w-56 flex-col transition-transform duration-200 md:translate-x-0 ${
+        className={`fixed left-0 top-0 z-30 flex h-full w-56 flex-col transition-transform duration-200 md:static md:h-auto md:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{
