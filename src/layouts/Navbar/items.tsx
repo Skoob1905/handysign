@@ -39,9 +39,7 @@ const ADMIN_ROUTES: RouteDef[] = [
 
 const CLIENT_ROUTES: RouteDef[] = [
   { label: "STAFF", to: "/staff", icon: Users },
-  { label: "UPLOAD", to: "/upload", icon: Upload },
   { label: "INVOICES", to: "/invoices", icon: Receipt },
-  { label: "TIMESHEETS", to: "/timesheets", icon: Clock },
   { label: "SUPPORT", to: "/support", icon: HelpCircle },
 ];
 
