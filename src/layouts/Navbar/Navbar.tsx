@@ -22,7 +22,7 @@ export const Navbar = ({ open, onClose }: NavbarProps) => {
       />
 
       <aside
-        className={`fixed left-0 top-0 z-30 flex h-full w-56 flex-col transition-transform duration-200 md:static md:h-auto md:translate-x-0 ${
+        className={`fixed left-0 top-0 z-30 flex h-full w-56 flex-col transition-transform duration-200 md:static md:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{
@@ -39,7 +39,7 @@ export const Navbar = ({ open, onClose }: NavbarProps) => {
           <X className="size-5" />
         </button>
 
-        <div className="flex justify-center px-4 pt-6 pb-12">
+        <div className="flex justify-center px-4 pt-6 pb-10">
           <a
             href={config.homepage || "/"}
             target="_blank"

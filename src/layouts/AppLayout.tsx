@@ -13,26 +13,26 @@ export const AppLayout = () => {
   const { pathname } = useLocation();
 
   const showSecondaryNavbar =
-    appUser?.role === "admin" &&
-    ["/staff", "/clients"].includes(pathname);
+    appUser?.role === "admin" && ["/staff", "/clients"].includes(pathname);
 
   return (
-    <div className="flex min-h-screen flex-col app-bg">
+    <div className="flex h-screen flex-col overflow-hidden app-bg">
       <GlobalBanner />
 
       <div className="flex flex-1 min-h-0">
         <Navbar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         <div
-          className="flex flex-1 flex-col"
+          className="flex min-h-0 flex-1 flex-col overflow-hidden"
           style={{ backgroundColor: "var(--header-bg)" }}
         >
           <header
-            className="grid h-[72px] grid-cols-[1fr_auto_1fr] items-center border-b px-4 sm:px-6"
+            className="grid h-[72px] shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b px-4 sm:px-6"
             style={{
               backgroundColor: "var(--header-bg)",
               borderColor: "transparent",
-              borderImage: "linear-gradient(90deg, #99f6e4, #93c5fd, #99f6e4) 1",
+              borderImage:
+                "linear-gradient(90deg, #99f6e4, #93c5fd, #99f6e4) 1",
             }}
           >
             <div className="flex items-center">
@@ -54,7 +54,7 @@ export const AppLayout = () => {
           </header>
 
           <main
-            className="flex flex-1 flex-col px-4 py-3 sm:py-6"
+            className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-3 sm:py-6"
             style={{ backgroundColor: "var(--muted)" }}
           >
             <Outlet />
