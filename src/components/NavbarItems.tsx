@@ -20,7 +20,6 @@ const ADMIN_ROUTES = [
   { label: "INVOICES", to: "/invoices" },
   { label: "TIMESHEETS", to: "/timesheets" },
   { label: "USERS", to: "/admin" },
-  { label: "PROFILE", to: "/profile" },
 ];
 
 const CLIENT_ROUTES = [
@@ -29,7 +28,6 @@ const CLIENT_ROUTES = [
   { label: "INVOICES", to: "/invoices" },
   { label: "TIMESHEETS", to: "/timesheets" },
   { label: "SUPPORT", to: "/support" },
-  { label: "PROFILE", to: "/profile" },
 ];
 
 function NavItem({

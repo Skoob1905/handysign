@@ -42,7 +42,7 @@ export function usePaginatedRecords<T = Record<string, unknown>>({
   facetFilters,
   query = "",
   page = 0,
-  hitsPerPage = 10,
+  hitsPerPage = 20,
   facets,
 }: UsePaginatedRecordsParams) {
 

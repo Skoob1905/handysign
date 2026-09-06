@@ -1,4 +1,4 @@
-import { Section } from "../../components/Section";
+import { Content } from "../../components/Content";
 
 const contracts = [
   { title: "Site Labour Agreement", parties: "You & Acme Corp", start: "01 Jan 2026", end: "31 Dec 2026", status: "Active", value: "£45,000" },
@@ -10,7 +10,7 @@ const contracts = [
 
 export const ContractsPage = () => (
   <div className="space-y-4">
-    <Section title="Contracts">
+    <Content title="Contracts">
       <div className="grid gap-3 sm:grid-cols-2">
         {contracts.map((c) => (
           <div key={c.title} className="rounded-xl border border-[var(--border)] p-4">
@@ -41,6 +41,6 @@ export const ContractsPage = () => (
           </div>
         ))}
       </div>
-    </Section>
+    </Content>
   </div>
 );

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Check } from "lucide-react";
-import { Section } from "../../components/Section";
+import { Content } from "../../components/Content";
 import { InformationCard } from "../../components/InformationCard";
 import { Button } from "../../components/ui";
 import { useAuth } from "../../context/AuthProvider";
@@ -35,7 +35,7 @@ export const InvoicesPage = () => {
 
   return (
     <div className="space-y-4">
-      <Section title="Invoices">
+      <Content title="Invoices">
         {loading ? (
           <p className="text-sm text-zinc-500">Loading invoices...</p>
         ) : myInvoices.length === 0 ? (
@@ -97,7 +97,7 @@ export const InvoicesPage = () => {
             })}
           </div>
         )}
-      </Section>
+      </Content>
     </div>
   );
 };

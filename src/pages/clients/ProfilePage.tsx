@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Mail, Key, Building, Shield } from "lucide-react";
 import { Button } from "../../components/ui";
-import { Section } from "../../components/Section";
+import { Content } from "../../components/Content";
 import { useAuth } from "../../context/AuthProvider";
 import { useToast } from "../../context/ToastProvider";
 import { sendForgotPassword } from "../../services/authService";
@@ -39,7 +39,7 @@ export const ProfilePage = () => {
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <Section
+      <Content
         title="Profile"
         action={
           <Button
@@ -86,7 +86,7 @@ export const ProfilePage = () => {
             </div>
           </div>
         </div>
-      </Section>
+      </Content>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAccordionParams } from "../../hooks/useAccordionParams";
 import { httpsCallable } from "firebase/functions";
 import { AccordionItem, AccordionRoot, Button, DeleteButton } from "../../components/ui";
-import { Section } from "../../components/Section";
+import { Content } from "../../components/Content";
 import { AccordionTitle } from "../../components/AccordionTitle";
 import { InformationCard } from "../../components/InformationCard";
 import { DeleteConfirmModal } from "../../components/DeleteConfirmModal";
@@ -102,8 +102,8 @@ export const AdminTimesheetsPage = () => {
   };
 
   return (
-    <div className="mx-auto space-y-4">
-      <Section title="Timesheets">
+    <div className="flex flex-1 flex-col space-y-4">
+      <Content title="Timesheets">
         {loading ? (
           <p className="text-sm text-zinc-500">Loading...</p>
         ) : agencies.length === 0 ? (
@@ -185,7 +185,7 @@ export const AdminTimesheetsPage = () => {
             })}
           </AccordionRoot>
         )}
-      </Section>
+      </Content>
 
       <DeleteConfirmModal
         open={deleteTarget !== null}

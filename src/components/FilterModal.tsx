@@ -60,7 +60,7 @@ export const FilterModal = ({
     () =>
       tagCounts
         ? Object.keys(tags).filter((id) => (tagCounts[id] ?? 0) > 0)
-        : Object.keys(tags),
+        : [],
     [tags, tagCounts],
   );
 
@@ -140,7 +140,7 @@ export const FilterModal = ({
               ) : (
                 <div className="mt-1 max-h-40 grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-3 overflow-y-auto">
                   {tagKeys.length === 0 ? (
-                    <Muted>No tags have been assigned</Muted>
+                    <Muted>No tags matching this name</Muted>
                   ) : (
                     tagKeys.map((id) => (
                       <Checkbox

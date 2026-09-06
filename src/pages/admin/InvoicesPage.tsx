@@ -7,7 +7,7 @@ import {
   Button,
   DeleteButton,
 } from "../../components/ui";
-import { Section } from "../../components/Section";
+import { Content } from "../../components/Content";
 import {
   DialogContent,
   DialogRoot,
@@ -79,7 +79,7 @@ export const AdminInvoicesPage = () => {
 
   return (
     <div className="space-y-4">
-      <Section title="Invoices">
+      <Content title="Invoices">
 
         {loading ? (
           <div className="flex items-center justify-center py-8">
@@ -223,7 +223,7 @@ export const AdminInvoicesPage = () => {
             </AccordionRoot>
           </div>
         )}
-      </Section>
+      </Content>
 
       <DialogRoot
         open={confirmPaid !== null}

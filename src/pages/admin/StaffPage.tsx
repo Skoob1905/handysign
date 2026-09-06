@@ -10,6 +10,7 @@ import { Pill } from "../../components/Pill";
 import { AccordionTitle } from "../../components/AccordionTitle";
 import { StaffListSection } from "../../components/StaffListSection";
 import { useDualAccordionParams } from "../../hooks/useDualAccordionParams";
+import { useRecordsTab } from "../../hooks/useRecordsTab";
 import {
   AccordionItem,
   ActionButton,
@@ -39,6 +40,9 @@ export const AdminStaffPage = () => {
 
   const { appUser } = useAuth();
   const { toast } = useToast();
+
+  const tab = useRecordsTab();
+  const isHistory = tab === "history";
 
   const tags = useAppStore((s) => s.tags);
   const addTag = useAppStore((s) => s.addTag);
@@ -213,8 +217,10 @@ export const AdminStaffPage = () => {
   };
 
   return (
-    <div className="mx-auto space-y-4">
-      <StaffListSection
+    <div className="flex flex-1 flex-col space-y-4">
+      {!isHistory && (
+        <>
+          <StaffListSection
         view="admin"
         refreshTrigger={staffRefreshTrigger}
         agencies={companies as unknown as Agency[]}
@@ -552,13 +558,17 @@ export const AdminStaffPage = () => {
           </div>
         </DialogContent>
       </DialogRoot>
+        </>
+      )}
 
-      <ImportHistory
-        type="staff"
-        cloudFunction="removeStaffImport"
-        getPreviewNames={(rows) => rows.map(getStaffNameFromRawRecord)}
-        onDeleteSuccess={handleDeleteSuccess}
-      />
+      {isHistory && (
+        <ImportHistory
+          type="staff"
+          cloudFunction="removeStaffImport"
+          getPreviewNames={(rows) => rows.map(getStaffNameFromRawRecord)}
+          onDeleteSuccess={handleDeleteSuccess}
+        />
+      )}
     </div>
   );
 };
